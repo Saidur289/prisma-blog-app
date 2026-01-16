@@ -5,6 +5,6 @@ import auth, { UserRole } from "../../middleware/auth";
 
 
 const router = Router()
-
+router.get('/', postController.getAllPost)
 router.post("/", auth(UserRole.USER),  postController.createPost)
 export const postsRouter = router

@@ -32,7 +32,7 @@ model Post {
 }
 
 model Comment {
-  id        String        @id @default(ulid())
+  id        String        @id @default(uuid())
   content   String        @db.Text
   authorId  String
   postId    String
