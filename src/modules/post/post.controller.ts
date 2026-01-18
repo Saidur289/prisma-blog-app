@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { postService } from "./post.service";
 import { PostStatus } from "../../../generated/prisma/enums";
+import paginationSortHelper from "../../helper/paginationSortHelper";
 
 
 
@@ -39,8 +40,10 @@ const getAllPost = async(req: Request, res: Response) => {
         const status = req.query.status as PostStatus | undefined
         // console.log(status);
         const authorId = req.query.authorId as string | undefined
-        console.log({authorId});
-     const result = await postService.getAllPost({search: searchText, tags, isFeatured, status, authorId})
+        // console.log({authorId});
+          const {page, limit, skip, sortBy, sortByOrder} = paginationSortHelper(req.query)
+           console.log("page: ",page, "limit: ", limit, "skip: ", skip, "sort: ", sortBy, "orderBy: ", sortByOrder);
+     const result = await postService.getAllPost({search: searchText, tags, isFeatured, status, authorId, page, limit, skip, sortBy, sortByOrder})
      res.status(200).json({
         success: true,
       date: result,

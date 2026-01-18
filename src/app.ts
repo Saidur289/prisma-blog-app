@@ -4,12 +4,13 @@ import { toNodeHandler } from "better-auth/node";
 import cors from 'cors'
 import { auth } from "./lib/auth";
 const app = express()
-app.all("/api/auth/*splat", toNodeHandler(auth));
-app.use(express.json())
 app.use(cors({
-    origin: process.env.BETTER_AUTH_URL || "http://localhost:4000", // client url set origin in postman
+    origin: ["http://localhost:3000", "http://localhost:4000"], // client url set origin in postman
     credentials: true
 }))
+app.all("/api/auth/*splat", toNodeHandler(auth));
+app.use(express.json())
+
 app.use('/posts', postsRouter)
 app.get('/', async(req: Request, res: Response) => {
     res.send("hello world")
