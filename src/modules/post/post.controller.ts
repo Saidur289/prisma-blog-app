@@ -43,7 +43,7 @@ const getAllPost = async(req: Request, res: Response) => {
         const authorId = req.query.authorId as string | undefined
         // console.log({authorId});
           const {page, limit, skip, sortBy, sortByOrder} = paginationSortHelper(req.query)
-           console.log("page: ",page, "limit: ", limit, "skip: ", skip, "sort: ", sortBy, "orderBy: ", sortByOrder);
+        //    console.log("page: ",page, "limit: ", limit, "skip: ", skip, "sort: ", sortBy, "orderBy: ", sortByOrder);
      const result = await postService.getAllPost({search: searchText, tags, isFeatured, status, authorId, page, limit, skip, sortBy, sortByOrder})
      res.status(200).json({
         success: true,

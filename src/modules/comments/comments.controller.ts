@@ -24,6 +24,94 @@ const createComment = async(req: Request, res: Response) => {
         })
     }
 }
+const getCommentById = async(req: Request, res: Response) => {
+    try {
+         const {commentId} = req.params
+         const result = await CommentService.getCommentById(commentId as string)
+        
+        res.status(200).json({
+            success: true,
+            msg: 'get single comments',
+            data: result
+        })
+      
+        
+    } catch (error) {
+        res.status(400).json({
+            error: "create comments fail",
+            wrong: error
+            
+        })
+    }
+}
+const getCommentsByAuthor = async(req: Request, res: Response) => {
+    try {
+         const {authorId} = req.params
+        //  console.log("authorId",authorId);
+         const result = await CommentService.getCommentsByAuthor(authorId as string)
+        
+        res.status(200).json({
+            success: true,
+            msg: 'get single comments',
+            data: result
+        })
+      
+        
+    } catch (error) {
+        res.status(400).json({
+            error: "create comments fail",
+            wrong: error
+            
+        })
+    }
+}
+const deleteComment = async(req: Request, res: Response) => {
+    try {
+        const user = req.user
+        if(!user) return undefined
+        const {commentId} = req.params
+        const result = await CommentService.deleteComment(commentId as string, user.id as string)
+        res.status(200).json({
+            success: true,
+            msg: 'deleted successfully',
+            
+        })
+      
+        
+    } catch (error) {
+        res.status(400).json({
+            error: "create comments fail",
+            wrong: error
+            
+        })
+    }
+}
+const updateComment = async(req: Request, res: Response) => {
+    try {
+        const user = req.user
+        if(!user) return undefined
+        const {commentId} = req.params
+        const result = await CommentService.updateComment(commentId as string, req.body  ,user.id as string)
+        res.status(200).json({
+            success: true,
+            msg: 'update comments successfully',
+            data: result
+            
+        })
+      
+        
+    } catch (error) {
+        res.status(400).json({
+            error: "update  comments fail",
+            wrong: error
+            
+        })
+    }
+}
 export const CommentController = {
-    createComment
+    createComment,
+    getCommentById,
+    getCommentsByAuthor,
+    deleteComment,
+    updateComment
 }
