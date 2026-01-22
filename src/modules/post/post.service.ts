@@ -1,4 +1,5 @@
 
+
 import { CommentStatus, Post, PostStatus } from "../../../generated/prisma/client";
 import { PostWhereInput } from "../../../generated/prisma/models";
 import { prisma } from "../../lib/prisma";
@@ -144,8 +145,67 @@ const getPostById = async(id: string ) => {
    
     
 }
+const getMyPosts = async(id: string) => {
+    await prisma.user.findUniqueOrThrow({
+        where: {
+          id,
+          status: "ACTIVE"
+        },
+        select: {
+            id: true
+        }
+    })
+   const result = await prisma.post.findMany({
+    where: {
+        authorId: id
+    },
+    orderBy: {createdAt: "desc"},
+    include: {
+        _count: {
+            select: {
+                comment: true
+            }
+        }
+    }
+   })
+    const total = await prisma.post.aggregate({
+      _count: {
+        id: true
+      },
+      where: {
+        authorId: id
+      }
+    })
+    return {
+        result, total
+    }
+}
+const updatePost = async(postId: string, authorId: string, data: Partial<Post>) => {
+ console.log(postId, authorId, data);
+ const postData = await prisma.post.findUniqueOrThrow({
+    where: {
+        id: postId,
+        
+    },
+    select: {
+        id: true,
+        authorId: true
+    }
+ })
+ if(postData.authorId !== authorId)  throw new Error("You are not owner")
+ return await prisma.post.update({
+    where: {
+        id: postId,
+        
+    },
+    data
+ })
+}
 export const postService = {
     createPost,
     getAllPost,
-    getPostById
+    getPostById,
+    getMyPosts,
+    updatePost
+
 }

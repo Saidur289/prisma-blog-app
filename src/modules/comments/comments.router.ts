@@ -11,5 +11,6 @@ router.get("/author/:authorId", auth(UserRole.USER, UserRole.ADMIN) ,CommentCont
 router.get("/:commentId", auth(UserRole.USER, UserRole.ADMIN),  CommentController.getCommentById)
 router.delete("/:commentId", auth(UserRole.USER, UserRole.ADMIN), CommentController.deleteComment)
 router.patch("/:commentId", auth(UserRole.USER, UserRole.ADMIN), CommentController.updateComment)
+router.patch("/:commentId/moderate", auth(UserRole.USER, UserRole.ADMIN), CommentController.moderateComment)
 
 export const commentsRouter = router

@@ -101,8 +101,30 @@ const updateComment = async(req: Request, res: Response) => {
       
         
     } catch (error) {
+         const errorMessage = (error instanceof Error) ? error.message : "update  comments fail"
         res.status(400).json({
-            error: "update  comments fail",
+            error: errorMessage,
+            
+            
+        })
+    }
+}
+const moderateComment = async(req: Request, res: Response) => {
+    try {
+        const {commentId} = req.params
+        const result = await CommentService.moderateComment(commentId as string, req.body)
+        res.status(200).json({
+            success: true,
+            msg: 'update status successfully',
+            data: result
+            
+        })
+      
+        
+    } catch (error) {
+        const errorMessage = (error instanceof Error) ? error.message : "update  status fail"
+        res.status(400).json({
+            error: errorMessage,
             wrong: error
             
         })
@@ -113,5 +135,6 @@ export const CommentController = {
     getCommentById,
     getCommentsByAuthor,
     deleteComment,
-    updateComment
+    updateComment,
+    moderateComment
 }
