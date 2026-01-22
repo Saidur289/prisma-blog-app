@@ -3,6 +3,7 @@ import { postService } from "./post.service";
 import { PostStatus } from "../../../generated/prisma/enums";
 import paginationSortHelper from "../../helper/paginationSortHelper";
 import { prisma } from "../../lib/prisma";
+import { UserRole } from "../../middleware/auth";
 
 
 
@@ -98,7 +99,7 @@ const getMyPosts = async(req: Request, res: Response) => {
         })
         // console.log(result);
     } catch (error) {
-        const errorMessage = error instanceof Error? error: "get my post  fail"
+        const errorMessage = error instanceof Error? error.message: "get my post  fail"
         res.status(400).json({
             error:errorMessage ,
             wrong: error
@@ -111,7 +112,9 @@ const updatePost = async(req: Request, res: Response) => {
          const user = req.user
          if(!user) return undefined
          const {postId} = req.params
-         const result = await postService.updatePost(postId as string, user.id, req.body)
+        //  console.log(user);
+         const isAdmin = user?.role === UserRole.ADMIN
+         const result = await postService.updatePost(postId as string, user.id, req.body, isAdmin)
         // console.log(result);
         res.status(200).json({
             success: true,
@@ -120,7 +123,7 @@ const updatePost = async(req: Request, res: Response) => {
         })
         // console.log(result);
     } catch (error) {
-        const errorMessage = error instanceof Error? error: "get my post  fail"
+        const errorMessage = error instanceof Error? error.message: "update post failed  fail"
         res.status(400).json({
             error:errorMessage ,
             wrong: error
