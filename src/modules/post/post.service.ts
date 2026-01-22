@@ -183,7 +183,7 @@ const getMyPosts = async(id: string) => {
 // user not able to update isFeature 
 //admin will able to update everything
 const updatePost = async(postId: string, authorId: string, data: Partial<Post>, isAdmin: boolean) => {
- console.log(postId, authorId, data);
+//  console.log(postId, authorId, data);
  const postData = await prisma.post.findUniqueOrThrow({
     where: {
         id: postId,
@@ -210,11 +210,34 @@ const updatePost = async(postId: string, authorId: string, data: Partial<Post>, 
     data
  })
 }
+//user- nijer post delete korte parbe
+//admin sobar post delete korte parbe
+const deletePost = async(postId: string, isAdmin: boolean, authorId: string) => {
+    // console.log(postId, isAdmin);
+   const postData=  await prisma.post.findUniqueOrThrow({
+        where: {
+            id: postId
+        },
+        select: {
+            id: true,
+            authorId: true
+        }
+    })
+    if(!isAdmin && (postData.authorId !== authorId)){
+        throw new Error("You are not allowed delete others post")
+    }
+    return await prisma.post.delete({
+        where: {
+            id: postId
+        }
+    })
+}
 export const postService = {
     createPost,
     getAllPost,
     getPostById,
     getMyPosts,
-    updatePost
+    updatePost,
+    deletePost
 
 }
