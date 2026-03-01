@@ -130,11 +130,13 @@ const moderateComment = async(req: Request, res: Response) => {
         })
     }
 }
+
 export const CommentController = {
     createComment,
     getCommentById,
     getCommentsByAuthor,
     deleteComment,
     updateComment,
-    moderateComment
+    moderateComment,
+    
 }

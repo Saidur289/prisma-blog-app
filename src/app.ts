@@ -4,6 +4,8 @@ import { toNodeHandler } from "better-auth/node";
 import cors from 'cors'
 import { auth } from "./lib/auth";
 import { commentsRouter } from "./modules/comments/comments.router";
+import { errorHandler } from "./middleware/errorHandler";
+import { notFound } from "./middleware/notFound";
 const app = express()
 app.use(cors({
     origin: ["http://localhost:3000", "http://localhost:4000"], // client url set origin in postman
@@ -17,4 +19,6 @@ app.use('/comments', commentsRouter)
 app.get('/', async(req: Request, res: Response) => {
     res.send("hello world")
 })
+app.use(errorHandler)
+app.use(notFound)
 export default app
